@@ -1,0 +1,24 @@
+spring:
+  data:
+    mongodb:
+      username: systemscheduling
+      password: systemscheduling123
+      host: localhost
+      port: 27017
+      database: dbsystemscheduling
+      authentication-database: admin
+      uri: mongodb+srv://systemscheduling:systemscheduling123@dbsystemscheduling.9se5shq.mongodb.net/?retryWrites=true&w=majority&tls=true&authMechanism=SCRAM-SHA-1
+  # Mail settings
+  # ?authMechanism=MONGODB-X509&tls=true&authSource=$external
+  # ?retryWrites=true&w=majority
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: systemscheduling281@gmail.com
+    password: nwbyfhhltnijnrsm
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
