@@ -15,10 +15,22 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: systemscheduling281@gmail.com
-    password: nwbyfhhltnijnrsm
+    password: aupcjiyyxptxjyqn
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: sweetserenityweddingevent@gmail.com
+#    password: gsdpdiqzvazdswuv
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
