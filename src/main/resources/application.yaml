@@ -7,7 +7,7 @@ spring:
       port: 27017
       database: dbsystemscheduling
       authentication-database: admin
-      uri: mongodb+srv://systemscheduling:systemscheduling123@dbsystemscheduling.9se5shq.mongodb.net/?retryWrites=true&w=majority&tls=true&authMechanism=SCRAM-SHA-1
+      uri: mongodb+srv://systemscheduling:systemscheduling123@dbsystemscheduling.9se5shq.mongodb.net/?retryWrites=true&w=majority&tls=true&authMechanism=SCRAM-SHA-1&serverSelectionTimeoutMS=5000&serverTimezone=UTC
   # Mail settings
   # ?authMechanism=MONGODB-X509&tls=true&authSource=$external
   # ?retryWrites=true&w=majority
