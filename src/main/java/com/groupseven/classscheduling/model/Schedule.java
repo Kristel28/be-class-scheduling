@@ -18,7 +18,7 @@ public class Schedule {
     private String id;
     private String instructorName;
     private String subject;
-    private String yearAndSection;
+    private String yearSection;
     private String semester;
     private int roomNumber;
     private String days;

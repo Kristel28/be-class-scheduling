@@ -17,9 +17,15 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @PostMapping
-    public ResponseEntity<Schedule> save(@RequestBody Schedule schedule){
-        return new ResponseEntity<>(scheduleService.save(schedule), HttpStatus.CREATED);
+    @PostMapping()
+    public ResponseEntity<String> addSchedule(@RequestBody Schedule newSchedule) {
+        if (scheduleService.isScheduleConflict(newSchedule)) {
+            return ResponseEntity.badRequest().body("Schedule conflict detected");
+        }
+
+        // Save the schedule since there are no conflicts
+        scheduleService.save(newSchedule);
+        return ResponseEntity.ok("Schedule saved successfully");
     }
 
     @GetMapping

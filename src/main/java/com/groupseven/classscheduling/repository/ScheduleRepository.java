@@ -9,4 +9,9 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
 
     List<Schedule> findByInstructorNameAndCourse(String instructorName, String course);
 
+
+    List<Schedule> findByInstructorNameAndYearSectionAndCourse(
+                String instructorName, String yearAndSection, String course);
+
+
 }
