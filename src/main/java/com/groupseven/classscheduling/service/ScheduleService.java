@@ -3,12 +3,14 @@ package com.groupseven.classscheduling.service;
 import com.groupseven.classscheduling.model.Schedule;
 import com.groupseven.classscheduling.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -22,27 +24,37 @@ public class ScheduleService {
     }
 
     public boolean isScheduleConflict(Schedule newSchedule) {
-        List<Schedule> existingSchedules = scheduleRepository.findByInstructorNameAndYearSectionAndCourse(
+        List<Schedule> existingSchedules = scheduleRepository.findByInstructorNameAndYearSectionAndCourseOrSemesterOrDaysAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
                 newSchedule.getInstructorName(),
                 newSchedule.getYearSection(),
-                newSchedule.getCourse()
+                newSchedule.getCourse(),
+                newSchedule.getSemester(),
+                newSchedule.getDays(),
+
+                newSchedule.getEndTime(),
+                newSchedule.getStartTime()
         );
 
-        // Check for conflicts with existing schedules
-        for (Schedule existingSchedule : existingSchedules) {
-            if (isTimeConflict(newSchedule, existingSchedule)) {
-                return true; // Conflict found
-            }
-        }
+        log.info("Existing Schedules: {}", existingSchedules.size());
 
+        if (isScheduleConflict(newSchedule, existingSchedules)) {
+            // Handle conflict, maybe throw an exception or return an error
+            return true;
+        } else {
+            // Save the new schedule
+            scheduleRepository.save(newSchedule);
+        }
         return false; // No conflicts
     }
 
-    private boolean isTimeConflict(Schedule newSchedule, Schedule existingSchedule) {
-        // Check if the new schedule's start time is before the existing schedule's end time
-        // and the new schedule's end time is after the existing schedule's start time
-        return newSchedule.getStartTime().isBefore(existingSchedule.getEndTime()) &&
-                newSchedule.getEndTime().isAfter(existingSchedule.getStartTime());
+    private boolean isScheduleConflict(Schedule newSchedule, List<Schedule> existingSchedules) {
+        for (Schedule existingSchedule : existingSchedules) {
+            if (newSchedule.getStartTime().isBefore(existingSchedule.getEndTime()) &&
+                    newSchedule.getEndTime().isAfter(existingSchedule.getStartTime())) {
+                return true; // Conflict found
+            }
+        }
+        return false; // No conflicts
     }
 
 
