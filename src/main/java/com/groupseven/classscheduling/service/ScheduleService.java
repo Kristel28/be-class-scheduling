@@ -24,13 +24,14 @@ public class ScheduleService {
     }
 
     public boolean isScheduleConflict(Schedule newSchedule) {
-        List<Schedule> existingSchedules = scheduleRepository.findByInstructorNameAndYearSectionAndCourseOrSemesterOrDaysAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+        List<Schedule> existingSchedules = scheduleRepository.
+                findByInstructorNameAndRoomNumberAndYearSectionAndCourseAndSemesterOrDaysAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
                 newSchedule.getInstructorName(),
+                newSchedule.getRoomNumber(),
                 newSchedule.getYearSection(),
                 newSchedule.getCourse(),
                 newSchedule.getSemester(),
                 newSchedule.getDays(),
-
                 newSchedule.getEndTime(),
                 newSchedule.getStartTime()
         );
