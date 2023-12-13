@@ -5,7 +5,10 @@ import com.groupseven.classscheduling.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,39 +27,42 @@ public class ScheduleService {
     }
 
     public boolean isScheduleConflict(Schedule newSchedule) {
-        List<Schedule> existingSchedules = scheduleRepository.
-                findByInstructorNameAndRoomNumberAndYearSectionAndCourseAndSemesterOrDaysAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-                newSchedule.getInstructorName(),
-                newSchedule.getRoomNumber(),
-                newSchedule.getYearSection(),
-                newSchedule.getCourse(),
-                newSchedule.getSemester(),
-                newSchedule.getDays(),
-                newSchedule.getEndTime(),
-                newSchedule.getStartTime()
-        );
+        List<Schedule> existingSchedules = scheduleRepository
+                .findByInstructorNameOrRoomNumberAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+                        newSchedule.getInstructorName(),
+                        newSchedule.getRoomNumber(),
+                        newSchedule.getStartTime(),
+                        newSchedule.getEndTime()
 
+                );
+
+        existingSchedules.forEach(System.out::println);
         log.info("Existing Schedules: {}", existingSchedules.size());
 
-        if (isScheduleConflict(newSchedule, existingSchedules)) {
-            // Handle conflict, maybe throw an exception or return an error
-            return true;
-        } else {
-            // Save the new schedule
-            scheduleRepository.save(newSchedule);
-        }
-        return false; // No conflicts
+        return existingSchedules.stream()
+                .anyMatch(existingSchedule ->
+                                newSchedule.getStartTime().isBefore(existingSchedule.getEndTime()) &&
+                                newSchedule.getEndTime().isAfter(existingSchedule.getStartTime()) &&
+                                newSchedule.getSemester().equals(existingSchedule.getSemester()) ||
+                                newSchedule.getInstructorName().equals(existingSchedule.getInstructorName()) &&
+                                newSchedule.getRoomNumber().equals(existingSchedule.getRoomNumber()) &&
+                                newSchedule.getDays().equals(existingSchedule.getDays())
+                );
     }
 
+    @Transactional
     private boolean isScheduleConflict(Schedule newSchedule, List<Schedule> existingSchedules) {
         for (Schedule existingSchedule : existingSchedules) {
             if (newSchedule.getStartTime().isBefore(existingSchedule.getEndTime()) &&
                     newSchedule.getEndTime().isAfter(existingSchedule.getStartTime())) {
-                return true; // Conflict found
+                if (newSchedule.getRoomNumber().equals(existingSchedule.getRoomNumber()) &&
+                        newSchedule.getSemester().equals(existingSchedule.getSemester()) &&
+                        newSchedule.getDays().equals(existingSchedule.getDays())) {
+                    return true;
+                }
             }
         }
-        return false; // No conflicts
+        return false; // No conflict
     }
-
 
 }

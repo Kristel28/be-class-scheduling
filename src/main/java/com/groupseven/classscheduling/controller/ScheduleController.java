@@ -24,8 +24,10 @@ public class ScheduleController {
         }
 
         // Save the schedule since there are no conflicts
-
+        scheduleService.save(newSchedule);
         return ResponseEntity.ok("Schedule saved successfully");
+
+
     }
 
     @GetMapping
