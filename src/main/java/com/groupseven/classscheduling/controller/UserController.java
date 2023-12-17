@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,6 +32,24 @@ public class UserController {
     @GetMapping("/test")
     public ResponseEntity<String> isAuthenticated(){
         return new ResponseEntity<>("User authenticated", HttpStatus.OK);
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String emailRequest) {
+        String token = UUID.randomUUID().toString();
+
+        try {
+            return userService.updateResetPasswordToken(token, emailRequest);
+        } catch (Exception e){
+            throw new IllegalStateException("No email found");
+        }
+    }
+
+    //Mapping to new password
+    @GetMapping("/confirm-account")
+    public ResponseEntity<String> confirmAttendance(@RequestParam String resetPasswordToken){
+//        userService.updatePassword(user);
+        return new ResponseEntity<>("User password successfully changed.", HttpStatus.OK);
     }
 
 
