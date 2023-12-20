@@ -24,8 +24,15 @@ public class ScheduleController {
         }
 
         // Save the schedule since there are no conflicts
-
+        scheduleService.save(newSchedule);
         return ResponseEntity.ok("Schedule saved successfully");
+
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Schedule> getScheduleById(@PathVariable String id){
+        return new ResponseEntity<>(scheduleService.getScheduleById(id), HttpStatus.OK);
     }
 
     @GetMapping
@@ -35,4 +42,18 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.getAllScheduleByUsernameAndCourse(instructorName, course), HttpStatus.OK);
     }
 
+    @PutMapping()
+    public ResponseEntity<Schedule> update(@RequestBody Schedule schedule){
+        String id = schedule.getId();
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("ID must be provided in the request body for update");
+        }
+        return new ResponseEntity<>(scheduleService.updateSchedule(id, schedule), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteScheduleById(@PathVariable String id){
+        scheduleService.deleteScheduleById(id);
+        return new ResponseEntity<>("Student successfully deleted.", HttpStatus.OK);
+    }
 }
