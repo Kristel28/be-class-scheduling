@@ -81,6 +81,7 @@ public class ScheduleService {
         existingSchedule.setInstructorName(schedule.getInstructorName());
         existingSchedule.setSubject(schedule.getSubject());
         existingSchedule.setYearSection(schedule.getYearSection());
+        existingSchedule.setPhoneNumber(schedule.getPhoneNumber());
         existingSchedule.setSemester(schedule.getSemester());
         existingSchedule.setRoomNumber(schedule.getRoomNumber());
         existingSchedule.setDays(schedule.getDays());

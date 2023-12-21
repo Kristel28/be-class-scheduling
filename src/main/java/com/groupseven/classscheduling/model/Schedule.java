@@ -32,6 +32,8 @@ public class Schedule {
     @Indexed(unique = true)
     private String yearSection;
     @Indexed(unique = true)
+    private String phoneNumber;
+    @Indexed(unique = true)
     private String semester;
     @Indexed(unique = true)
     private String roomNumber;
